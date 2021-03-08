@@ -1,10 +1,5 @@
-from kubernetes import config
-from kubernetes.client.api import core_v1_api
-from kubernetes.stream import stream
-
-import re
 import typer
-from k8sservices import *
+from src.k8sservices import *
 
 app = typer.Typer()
 
@@ -22,7 +17,8 @@ def getpods():
     config.load_kube_config()
     api = core_v1_api.CoreV1Api()
     resp = api.list_namespaced_pod("default")
-    print(resp)
+    for i in resp.items:
+        print(i.metadata.annotations)
 
 if __name__ == '__main__':
     app()
