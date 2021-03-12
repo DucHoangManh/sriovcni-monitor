@@ -6,7 +6,7 @@ from kubernetes.client.rest import ApiException
 from kubernetes.stream import stream
 
 import re
-
+from netInfo import NetInfo
 
 def exec_commands(api_instance):
   name = 'busybox-test'
@@ -66,7 +66,7 @@ def exec_commands(api_instance):
                 stderr=True, stdin=False,
                 stdout=True, tty=False)
   l = re.findall('\d+:\s.+\s{4}.+', resp)
-  print(l)
+
 
   # Calling exec interactively
   exec_command = ['/bin/sh']
@@ -94,10 +94,21 @@ def exec_commands(api_instance):
     else:
       break
 
-  resp.write_stdin("date\n")
-  sdate = resp.readline_stdout(timeout=3)
-  print("Server date command returns: %s" % sdate)
-  resp.write_stdin("whoami\n")
-  user = resp.readline_stdout(timeout=3)
-  print("Server user is: %s" % user)
+  resp.write_stdin("hostname\n")
+  host = resp.readline_stdout(timeout=1)
   resp.close()
+
+  result = []
+  for item in l:
+    _item = item.split(' ')
+    if (_item[1] == "lo:"):
+      continue
+    n = NetInfo(
+      name=_item[1],
+      macAddress=_item[14],
+      type=_item[2],
+      mtu=_item[4],
+      hostName=host
+    )
+    result.append(n)
+  return result
