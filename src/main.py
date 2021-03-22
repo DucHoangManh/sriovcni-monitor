@@ -1,7 +1,5 @@
 import typer
 import re
-from k8sservices import *
-from kubernetes import client, config
 from podExec import *
 
 app = typer.Typer()
@@ -10,7 +8,7 @@ app = typer.Typer()
 def getinfo():
     config.load_kube_config()
     core_v1 = client.CoreV1Api()
-    deviceList=getIplink(core_v1)
+    deviceList=execPods()
     ret = core_v1.list_namespaced_pod("default")
     for i in ret.items:
         if (i.metadata.annotations is not None):
@@ -42,9 +40,9 @@ def getpods():
     for i in ret.items:
         print(i.metadata.name)
 
-@app.command()
-def test():
-    getPod()
+# @app.command()
+# def test():
+#     getPod()
 
 
 

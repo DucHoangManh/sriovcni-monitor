@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: sriov-monitor-daemonset
+spec:
+  selector:
+      matchLabels:
+        name: sriov-monitor-agent
+  template:
+    metadata:
+      labels:
+        name: sriov-monitor-agent
+    spec:
+      containers:
+      - name: sriov-monitor-agent
+        image: busybox
+        imagePullPolicy: IfNotPresent
+        args: ["/bin/sh", "-c", "while true;do date;sleep 5; done"]
+      hostNetwork: true
+      imagePullSecrets:
+        - name: regcred
