@@ -44,6 +44,18 @@ def getpods():
 # def test():
 #     getPod()
 
+@app.command()
+def cleanup():
+    config.load_kube_config()
+    appsv1 = client.AppsV1Api
+    api_response = appsv1.delete_namespaced_daemon_set(
+        name="sriov-monitor-daemonset",
+        namespace="default",
+        body=client.V1DeleteOptions(
+            propagation_policy='Foreground',
+            grace_period_seconds=5))
+    print("Daemonset deleted. status='%s'" % str(api_response.status))
+
 
 
 if __name__ == '__main__':
