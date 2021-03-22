@@ -2,7 +2,7 @@ import typer
 import re
 from k8sservices import *
 from kubernetes import client, config
-
+from podExec import *
 
 app = typer.Typer()
 
@@ -42,13 +42,10 @@ def getpods():
     for i in ret.items:
         print(i.metadata.name)
 
-# @app.command()
-# def test():
-#     config.load_kube_config()
-#
-#     core_v1 = client.CoreV1Api()
-#     exec_commands(core_v1)
-#
+@app.command()
+def test():
+    getPod()
+
 
 
 if __name__ == '__main__':
