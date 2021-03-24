@@ -18,16 +18,15 @@ def getinfo():
                 for addr in l:
                     #print(addr)
                     for device in deviceList:
-                        for vf in device.vfs:
-                            if addr==str(vf.macAddress):
-                                print("pod {podName} use device {deviceName} with mac address {pfMac} with vf {vfMac} in node {host}"
-                                      .format(
-                                    podName=i.metadata.name,
-                                    deviceName=device.name,
-                                    pfMac=device.macAddress,
-                                    vfMac=vf.macAddress,
-                                    host=device.hostName
-                                ))
+                        if addr==str(device.macAddress):
+                            print("pod {podName} with Ip {podIp} use device {deviceName} with mac address {pfMac} in node {host}"
+                                  .format(
+                                podName=i.metadata.name,
+                                deviceName=device.name,
+                                pfMac=device.macAddress,
+                                podIp=i.status.pod_ip,
+                                host=device.hostName
+                            ))
 
 @app.command()
 def getpods():
